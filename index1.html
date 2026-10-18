@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sing It V4.2</title>
+<style>
+:root{
+  --accent:#8067d8; --bg:#f8f6ff; --card:#fff; --text:#292633; --muted:#817c8c;
+  --soft:#eee9ff; --line:#e8e4ef; --danger:#b84f62;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif;background:var(--bg);color:var(--text)}
+body{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:620px;margin:auto;min-height:100vh}
+.page{display:none;padding:18px 18px 105px}
+.page.active{display:block}
+.center{text-align:center}
+.logo{width:62px;height:62px;border-radius:22px;background:var(--accent);color:white;display:grid;place-items:center;margin:20px auto 12px;font-weight:800;font-size:25px;box-shadow:0 10px 30px #00000012}
+h1{font-size:28px;margin:4px 0}
+h2{font-size:21px;margin:8px 0 14px}
+.sub{color:var(--muted);font-size:14px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;margin:14px 0;box-shadow:0 8px 30px #3d31560a}
+.search{display:flex;gap:8px;margin-top:16px}
+.search input,.field,textarea,select{width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:16px;padding:13px 14px;outline:none}
+.search input:focus,.field:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
+.primary{border:0;background:var(--accent);color:white;border-radius:16px;padding:13px 18px;font-weight:700}
+.secondary{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:16px;padding:12px 16px}
+.linkbtn{border:0;background:transparent;color:var(--accent);padding:9px;font-weight:650}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:24px 3px 8px}
+.section-title b{font-size:17px}
+.song{display:flex;gap:12px;align-items:center}
+.cover{width:54px;height:54px;border-radius:16px;background:var(--soft);display:grid;place-items:center;font-size:21px;flex:0 0 auto}
+.songinfo{min-width:0;flex:1}
+.songinfo strong{display:block}
+.progress{height:7px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}
+.progress i{display:block;height:100%;background:var(--accent);width:0%}
+.empty{padding:24px 8px;text-align:center;color:var(--muted)}
+.bottomnav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(620px,100%);height:calc(68px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;z-index:20}
+.navbtn{flex:1;border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px}
+.navbtn span{font-size:21px}
+.navbtn.active{color:var(--accent);font-weight:700}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.setting{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.setting:last-child{border-bottom:0}
+.palette{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.swatch{width:35px;height:35px;border-radius:50%;border:3px solid var(--card);outline:1px solid var(--line)}
+label.small{font-size:13px;color:var(--muted);display:block;margin:13px 0 6px}
+details{margin-top:10px}
+summary{color:var(--accent);cursor:pointer;padding:8px 0}
+.addpanel{display:none}
+.addpanel.show{display:block}
+.notice{background:var(--soft);padding:12px 14px;border-radius:14px;color:var(--muted);font-size:13px;margin-top:10px}
+.study-header{position:sticky;top:0;z-index:12;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(14px);padding:12px 2px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.study-page{padding-bottom:110px}
+.lyric-main{font-size:28px;font-weight:800;line-height:1.55;margin:22px 0 6px;word-break:keep-all}
+.roman{color:var(--accent);font-size:15px;margin-bottom:8px}
+.translation{color:var(--muted);font-size:15px;line-height:1.6}
+.tokens{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:20px 0}
+.token{border:1px solid var(--line);background:var(--card);padding:9px 12px;border-radius:14px}
+.tokenhint{min-height:48px;background:var(--soft);border-radius:16px;padding:12px;color:var(--muted);font-size:14px;text-align:center}
+.practice{display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px}
+.practice input{width:100%;border:1px solid var(--line);border-radius:15px;padding:13px;text-align:center;background:var(--card);color:var(--text)}
+.practice input.good{border-color:#68a77c;background:#f2fff5}
+.practice input.bad{border-color:#d68a98}
+.study-controls{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(620px,100%);z-index:30;background:color-mix(in srgb,var(--card) 96%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:none;gap:8px}
+.study-controls.show{display:flex}
+.study-controls button{flex:1}
+.finish{display:none;text-align:center;padding:30px 10px}
+.finish.show{display:block}
+.hidden{display:none!important}
+.chip{display:inline-block;padding:7px 10px;border-radius:99px;background:var(--soft);font-size:12px;color:var(--accent);margin:3px}
+@media(prefers-color-scheme:dark){
+  :root[data-mode="system"]{--bg:#16151b;--card:#211f27;--text:#f4f0fa;--muted:#aaa3b5;--line:#34313b;--soft:#2b263a}
+}
+:root[data-mode="dark"]{--bg:#16151b;--card:#211f27;--text:#f4f0fa;--muted:#aaa3b5;--line:#34313b;--soft:#2b263a}
+:root[data-mode="light"]{--bg:#f8f6ff;--card:#fff;--text:#292633;--muted:#817c8c;--line:#e8e4ef;--soft:#eee9ff}
+</style>
+</head>
+<body>
+<div class="app">
+  <section id="home" class="page active">
+    <div class="center">
+      <div class="logo">S</div>
+      <h1>Sing It</h1>
+      <div class="sub">喜欢这首歌？把它唱会。</div>
+      <div class="search">
+        <input id="searchInput" placeholder="搜索歌曲或歌手">
+        <button class="primary" onclick="showAdd()">搜索</button>
+      </div>
+      <button class="linkbtn" onclick="showAdd()">＋ 添加一首歌</button>
+    </div>
+
+    <div id="addPanel" class="card addpanel">
+      <h2 class="center">想学哪首歌？</h2>
+      <div class="notice">这个体验版暂时还没接在线曲库。现在可以直接粘贴歌词体验；以后这里会变成真正的搜歌入口。</div>
+      <label class="small">歌名</label><input id="title" class="field" placeholder="例如：Hurt">
+      <label class="small">歌手</label><input id="artist" class="field" placeholder="歌手（可不填）">
+      <label class="small">歌词</label><textarea id="lyrics" rows="7" placeholder="直接粘贴歌词，每行一句"></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="secondary" onclick="hideAdd()">取消</button>
+        <button class="primary" onclick="createSong()">都准备好了 ✓</button>
+      </div>
+      <details><summary>更多导入方式 ›</summary><div class="sub">LRC / 本地音源会在后续体验版里放到这里，不再要求一开始上传文件。</div></details>
+    </div>
+
+    <div class="section-title"><b>继续学习</b></div>
+    <div id="continueCard" class="card empty">还没有正在学习的歌曲。<br>搜一首喜欢的歌开始吧 ♡</div>
+
+    <div class="section-title"><b>我的歌曲</b><button class="linkbtn" onclick="go('study')">查看学习 ›</button></div>
+    <div id="songList" class="card empty">你的歌曲会出现在这里。</div>
+
+    <div class="section-title"><b>我的学习</b></div>
+    <div class="card center"><span class="chip" id="statSongs">0 首正在学习</span><span class="chip" id="statLines">0 句已练习</span></div>
+  </section>
+
+  <section id="study" class="page">
+    <div class="center">
+      <div class="logo" style="width:50px;height:50px;border-radius:18px;font-size:20px">S</div>
+      <h2>学习</h2>
+      <div class="sub">你正在练的歌，都在这里。</div>
+    </div>
+    <div id="studyList" class="card empty">还没有歌曲。去首页找一首喜欢的歌吧。</div>
+  </section>
+
+  <section id="me" class="page">
+    <div class="center">
+      <div class="logo" style="background:var(--soft);color:var(--accent)">○</div>
+      <h2>我的</h2>
+      <div class="sub">登录后可以在不同设备继续学习。</div>
+      <button class="primary" onclick="softMessage('账号功能先保留界面，后续再接真正的登录与同步。')">登录 / 创建账号</button>
+    </div>
+    <div class="card">
+      <div class="setting"><b>🎨 外观</b><button class="linkbtn" onclick="toggleBox('appearance')">设置 ›</button></div>
+      <div id="appearance" class="hidden">
+        <label class="small">显示模式</label>
+        <select id="mode" onchange="setMode(this.value)"><option value="system">跟随手机</option><option value="light">浅色</option><option value="dark">深色</option></select>
+        <label class="small">主题颜色</label>
+        <div class="palette">
+          <button class="swatch" style="background:#8067d8" onclick="setAccent('#8067d8')"></button>
+          <button class="swatch" style="background:#df789e" onclick="setAccent('#df789e')"></button>
+          <button class="swatch" style="background:#65a9c9" onclick="setAccent('#65a9c9')"></button>
+          <button class="swatch" style="background:#69a889" onclick="setAccent('#69a889')"></button>
+          <button class="swatch" style="background:#dc8b57" onclick="setAccent('#dc8b57')"></button>
+        </div>
+        <label class="small">字体</label>
+        <select onchange="setFont(this.value)"><option value="system">默认</option><option value="round">圆润</option><option value="serif">优雅</option></select>
+        <details><summary>高级自定义颜色 ›</summary>
+          <label class="small">按钮 / 主色</label><input type="color" value="#8067d8" oninput="setAccent(this.value)">
+          <label class="small">背景颜色</label><input type="color" value="#f8f6ff" oninput="document.documentElement.style.setProperty('--bg',this.value)">
+          <label class="small">文字颜色</label><input type="color" value="#292633" oninput="document.documentElement.style.setProperty('--text',this.value)">
+        </details>
+      </div>
+      <div class="setting"><b>🌐 语言</b><button class="linkbtn" onclick="toggleBox('language')">设置 ›</button></div>
+      <div id="language" class="hidden">
+        <label class="small">应用语言</label><select><option>简体中文</option></select>
+        <label class="small">歌词翻译成</label><select><option>简体中文</option></select>
+        <label class="small">学习辅助</label>
+        <div class="sub">整句翻译默认显示；点击词 / 词组时显示小释义。辅助读音以后会根据歌曲语言自动准备。</div>
+      </div>
+      <div class="setting"><span>帮助与反馈</span><span>›</span></div>
+      <div class="setting"><span>关于 Sing It</span><span>›</span></div>
+    </div>
+  </section>
+
+  <section id="lesson" class="page study-page">
+    <div class="study-header">
+      <button class="linkbtn" onclick="exitLesson()">‹ 返回</button>
+      <b id="lessonTitle">歌曲</b>
+      <span id="counter" class="sub">1/1</span>
+    </div>
+    <div id="lessonBody"></div>
+    <div id="finishCard" class="finish">
+      <div class="logo">✓</div><h2>这一轮练完啦 ♡</h2>
+      <p class="sub" id="finishText"></p>
+      <button class="primary" onclick="go('study')">回到学习</button>
+      <button class="secondary" onclick="restartLesson()" style="margin-left:6px">再练一遍</button>
+    </div>
+  </section>
+</div>
+
+<nav id="bottomNav" class="bottomnav">
+  <button class="navbtn active" data-page="home" onclick="go('home')"><span>⌂</span>首页</button>
+  <button class="navbtn" data-page="study" onclick="go('study')"><span>◎</span>学习</button>
+  <button class="navbtn" data-page="me" onclick="go('me')"><span>○</span>我的</button>
+</nav>
+
+<div id="studyControls" class="study-controls">
+  <button id="prevBtn" class="secondary" onclick="prevLine()">‹ 上一条</button>
+  <button class="secondary" onclick="toggleStar()">☆</button>
+  <button id="nextBtn" class="primary" onclick="nextLine()">下一条 ›</button>
+</div>
+
+<script>
+let songs=JSON.parse(localStorage.getItem('singit42songs')||'[]');
+let currentSong=null,currentLine=0;
+const $=s=>document.querySelector(s);
+document.documentElement.dataset.mode=localStorage.getItem('singit42mode')||'system';
+
+function save(){localStorage.setItem('singit42songs',JSON.stringify(songs));renderAll()}
+function go(id){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  $('#'+id).classList.add('active');
+  $('#bottomNav').classList.remove('hidden');
+  $('#studyControls').classList.remove('show');
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  window.scrollTo(0,0); renderAll();
+}
+function showAdd(){go('home');$('#addPanel').classList.add('show');setTimeout(()=>$('#addPanel').scrollIntoView({behavior:'smooth',block:'center'}),50)}
+function hideAdd(){$('#addPanel').classList.remove('show')}
+function createSong(){
+  let title=$('#title').value.trim(), artist=$('#artist').value.trim(), raw=$('#lyrics').value.trim();
+  if(!title||!raw){softMessage('先写上歌名和歌词就可以开始啦。');return}
+  let lines=raw.split(/\n+/).map(x=>x.replace(/^\[[0-9:.]+\]\s*/,'').trim()).filter(Boolean);
+  songs.unshift({id:Date.now(),title,artist,lines,progress:0,starred:[]});
+  $('#title').value='';$('#artist').value='';$('#lyrics').value='';hideAdd();save();startLesson(songs[0].id);
+}
+function renderAll(){
+  let c=$('#continueCard'), sl=$('#songList'), st=$('#studyList');
+  if(!songs.length){
+    c.className='card empty';c.innerHTML='还没有正在学习的歌曲。<br>搜一首喜欢的歌开始吧 ♡';
+    sl.className='card empty';sl.textContent='你的歌曲会出现在这里。';
+    st.className='card empty';st.textContent='还没有歌曲。去首页找一首喜欢的歌吧。';
+  }else{
+    let s=songs[0], pct=Math.round((s.progress||0)/s.lines.length*100);
+    c.className='card';c.innerHTML=songHTML(s,true);
+    sl.className='card';sl.innerHTML=songs.slice(0,3).map(x=>songHTML(x,false)).join('<div style="height:12px"></div>');
+    st.className='card';st.innerHTML=songs.map(x=>songHTML(x,true)).join('<div style="height:14px;border-top:1px solid var(--line);margin:14px 0"></div>');
+  }
+  $('#statSongs').textContent=songs.length+' 首正在学习';
+  $('#statLines').textContent=songs.reduce((a,s)=>a+(s.progress||0),0)+' 句已练习';
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function songHTML(s,button){
+  let pct=Math.round((s.progress||0)/s.lines.length*100);
+  return `<div class="song"><div class="cover">♫</div><div class="songinfo"><strong>${esc(s.title)}</strong><span class="sub">${esc(s.artist||'')} · ${s.progress||0}/${s.lines.length} 句</span><div class="progress"><i style="width:${pct}%"></i></div></div>${button?`<button class="primary" onclick="startLesson(${s.id})">继续</button>`:''}</div>`;
+}
+function startLesson(id){
+  currentSong=songs.find(s=>s.id===id); if(!currentSong)return;
+  currentLine=Math.min(currentSong.progress||0,currentSong.lines.length-1);
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('#lesson').classList.add('active');
+  $('#bottomNav').classList.add('hidden');$('#studyControls').classList.add('show');$('#finishCard').classList.remove('show');
+  renderLesson();window.scrollTo(0,0);
+}
+function splitTokens(line){
+  if(/\s/.test(line)) return line.split(/\s+/);
+  try{ return [...new Intl.Segmenter(undefined,{granularity:'word'}).segment(line)].filter(x=>x.isWordLike).map(x=>x.segment) }
+  catch(e){ return [...line] }
+}
+function detectLang(t){
+  if(/[가-힣]/.test(t))return 'ko-KR'; if(/[ぁ-んァ-ン]/.test(t))return 'ja-JP'; if(/[\u4e00-\u9fff]/.test(t))return 'zh-CN'; return 'en-US';
+}
+function speak(t){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang=detectLang(t);u.rate=.82;speechSynthesis.speak(u);
+}
+function renderLesson(){
+  let line=currentSong.lines[currentLine], toks=splitTokens(line);
+  $('#lessonTitle').textContent=currentSong.title;$('#counter').textContent=(currentLine+1)+' / '+currentSong.lines.length;
+  $('#lessonBody').innerHTML=`<div class="card center">
+    <div class="sub">点词 / 词组可以听发音</div>
+    <div class="lyric-main">${esc(line)}</div>
+    <div class="translation">整句翻译将在接入翻译服务后显示在这里。</div>
+    <div class="tokens">${toks.map((t,i)=>`<button class="token" onclick="tokenTap('${encodeURIComponent(t)}',${i})">${esc(t)}</button>`).join('')}</div>
+    <div id="tokenHint" class="tokenhint">点一个词，这里会显示它的小翻译，并播放发音。</div>
+    <div class="practice">${toks.map((t,i)=>`<input autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入 ${i+1}" data-answer="${encodeURIComponent(t)}" onkeydown="practiceKey(event,this,${i})">`).join('')}</div>
+  </div>
+  <div class="card center"><button class="secondary" onclick="speak('${encodeURIComponent(line)}')">🔊 听整句</button><p class="sub">输入正确后按回车：自动发音，并跳到下一格。</p></div>`;
+  $('#prevBtn').disabled=currentLine===0;
+  $('#nextBtn').textContent=currentLine===currentSong.lines.length-1?'完成这一轮 ✓':'下一条 ›';
+}
+function tokenTap(enc){let t=decodeURIComponent(enc);speak(t);$('#tokenHint').innerHTML=`<b>${esc(t)}</b><br><span class="sub">小翻译将在智能词组释义接入后显示。</span>`}
+function practiceKey(e,el,i){
+  if(e.key!=='Enter')return;e.preventDefault();
+  let ans=decodeURIComponent(el.dataset.answer), val=el.value.trim();
+  el.classList.remove('good','bad');
+  if(val===ans){
+    el.classList.add('good');speak(val);
+    let inputs=[...document.querySelectorAll('.practice input')];
+    if(inputs[i+1])inputs[i+1].focus();
+  }else{el.classList.add('bad')}
+}
+function nextLine(){
+  if(currentLine===currentSong.lines.length-1){finishRound();return}
+  currentLine++; currentSong.progress=Math.max(currentSong.progress||0,currentLine);save();renderLesson();window.scrollTo(0,0)
+}
+function prevLine(){if(currentLine>0){currentLine--;renderLesson();window.scrollTo(0,0)}}
+function toggleStar(){
+  let a=currentSong.starred||[];let idx=a.indexOf(currentLine);idx>=0?a.splice(idx,1):a.push(currentLine);currentSong.starred=a;save()
+}
+function finishRound(){
+  currentSong.progress=currentSong.lines.length;save();$('#lessonBody').innerHTML='';$('#studyControls').classList.remove('show');
+  $('#finishText').textContent=`${currentSong.lines.length} / ${currentSong.lines.length} 句 · ${currentSong.starred?.length||0} 个难句`;
+  $('#finishCard').classList.add('show');window.scrollTo(0,0)
+}
+function restartLesson(){currentLine=0;$('#finishCard').classList.remove('show');$('#studyControls').classList.add('show');renderLesson()}
+function exitLesson(){go('study')}
+function toggleBox(id){$('#'+id).classList.toggle('hidden')}
+function setAccent(v){document.documentElement.style.setProperty('--accent',v);localStorage.setItem('singit42accent',v)}
+function setMode(v){document.documentElement.dataset.mode=v;localStorage.setItem('singit42mode',v)}
+function setFont(v){
+ let f=v==='round'?'"Arial Rounded MT Bold","Noto Sans SC",sans-serif':v==='serif'?'Georgia,"Noto Serif SC",serif':'-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif';
+ document.body.style.fontFamily=f;localStorage.setItem('singit42font',v)
+}
+function softMessage(t){let old=document.querySelector('.toast');if(old)old.remove();let d=document.createElement('div');d.className='toast';d.textContent=t;d.style='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:99;background:var(--text);color:var(--card);padding:11px 15px;border-radius:14px;max-width:82%;font-size:13px';document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+let ac=localStorage.getItem('singit42accent');if(ac)setAccent(ac);setFont(localStorage.getItem('singit42font')||'system');$('#mode').value=localStorage.getItem('singit42mode')||'system';renderAll();
+</script>
+</body>
+</html>
