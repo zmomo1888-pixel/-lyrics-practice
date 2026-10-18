@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f6f4">
+<title>Sing It V4.3</title>
+<style>
+:root{
+ --accent:#17191f;--accentText:#fff;--bg:#f6f6f4;--text:#17191f;
+ --card:#fff;--soft:#ececea;--line:#deded9;--muted:#777b83;--bad:#d74850;
+ --font:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif;
+}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font)}
+button,input,select{font:inherit;color:inherit}.app{max-width:620px;min-height:100dvh;margin:auto;padding-bottom:76px}
+.hide{display:none!important}.top{height:58px;padding:10px 18px;display:flex;align-items:center;justify-content:space-between}
+.icon{border:0;background:transparent;padding:9px;border-radius:12px;font-weight:700}
+.hero{min-height:calc(100dvh - 134px);display:flex;align-items:center;justify-content:center;padding:30px}
+.heroInner{width:100%;text-align:center}.mark{width:62px;height:62px;margin:0 auto 25px;border-radius:20px;background:var(--accent)}
+h1{font-size:42px;letter-spacing:-1.5px;margin:0 0 10px}.tag{font-size:17px;margin-bottom:44px}
+.search{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;text-align:left;color:var(--muted)}
+.primary{width:100%;margin-top:12px;padding:15px;border:0;border-radius:17px;background:var(--accent);color:var(--accentText);font-weight:750}
+.nav{position:fixed;z-index:20;bottom:0;left:50%;transform:translateX(-50%);width:min(620px,100%);height:72px;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.nav button{flex:1;border:0;background:transparent;color:var(--muted)}.nav .on{color:var(--text);font-weight:800}
+.page{padding:0 18px}.brand{display:flex;align-items:center;gap:11px;padding:13px 0 22px}.brand .mark{width:31px;height:31px;border-radius:9px;margin:0}.brand b{font-size:24px}
+.section{margin:26px 0}.section h2{font-size:19px;margin:0 0 11px}.song{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px;margin:9px 0}
+.cover{width:49px;height:49px;border-radius:11px;background:var(--soft);display:grid;place-items:center;font-weight:800}.meta{flex:1}.small{font-size:12px;color:var(--muted)}
+.pill{border:0;border-radius:99px;padding:9px 14px;background:var(--accent);color:var(--accentText);font-weight:700}
+.lesson{padding-bottom:65px}.lessonHead{position:sticky;top:0;z-index:8;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:8px 16px 4px;text-align:center}
+.title b{display:block}.title .small{display:block}.tabs{display:flex;margin-top:9px}.tabs button{flex:1;border:0;background:transparent;padding:10px;color:var(--muted)}.tabs .on{color:var(--text);font-weight:800;border-bottom:2px solid var(--text)}
+.toolrow{display:flex;gap:6px;overflow:auto;padding:9px 0 3px}.toolrow button{white-space:nowrap;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:7px 10px;font-size:12px}.toolrow .on{background:var(--accent);color:var(--accentText);border-color:var(--accent)}
+.lineCard{padding:20px 0;border-bottom:1px solid var(--line)}.chunks,.inputs,.challengeInputs{display:grid;gap:8px;grid-template-columns:repeat(var(--n),minmax(0,1fr))}
+.chunks{grid-template-columns:repeat(var(--n),minmax(0,1fr)) 35px}.chunk{min-width:0;border:0;border-radius:9px;background:var(--soft);padding:10px 5px;font-size:13px;font-weight:700}
+.chunk.covered{color:transparent}.play{width:34px;height:34px;border:0;border-radius:50%;background:var(--accent);color:var(--accentText)}
+.inputs{padding-right:43px;margin-top:8px}.inputs input,.challengeInputs input{width:100%;min-width:0;border:1px solid var(--line);background:var(--card);border-radius:9px;padding:10px 7px;outline:0}
+.inputs input:focus,.challengeInputs input:focus{border-color:var(--text)}.bad{color:var(--bad)!important;border-color:var(--bad)!important}
+.extra{font-size:12px;color:var(--muted);padding-right:43px;margin-top:7px}.translation{color:var(--text);opacity:.68}
+.songSwitch{position:fixed;z-index:9;bottom:72px;left:50%;transform:translateX(-50%);width:min(620px,100%);padding:8px 18px;display:flex;justify-content:space-between;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.songSwitch button{border:0;border-radius:13px;background:var(--soft);padding:10px 15px}
+.challengeNote{font-size:13px;color:var(--muted);margin:18px 0}.challengeRow{padding:17px 0;border-bottom:1px solid var(--line)}
+.profile h1{font-size:32px;margin:15px 0}.menu{background:var(--card);border:1px solid var(--line);border-radius:17px;overflow:hidden}.menu div{padding:16px;border-bottom:1px solid var(--line)}.menu div:last-child{border:0}
+.sheetBack{position:fixed;inset:0;z-index:40;background:#0006;display:flex;align-items:flex-end;justify-content:center}.sheet{width:min(620px,100%);background:var(--bg);border-radius:25px 25px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));max-height:82dvh;overflow:auto}
+.sheet h2{margin:0 0 18px}.setting{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}input[type=color]{width:45px;height:34px;border:0;background:transparent;padding:0}.presetRow{display:flex;gap:10px;flex-wrap:wrap}.preset{width:36px;height:36px;border-radius:11px;border:1px solid #bbb}
+.modal{position:fixed;inset:0;z-index:45;background:#0006;display:flex;align-items:center;justify-content:center;padding:26px}.modalCard{width:min(350px,100%);background:var(--bg);border-radius:22px;padding:21px}.actions{display:flex;gap:9px;margin-top:18px}.actions button{flex:1;border:0;border-radius:13px;padding:12px;background:var(--soft)}.actions .yes{background:var(--accent);color:var(--accentText)}
+.toast{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:60;background:var(--text);color:var(--bg);padding:10px 14px;border-radius:99px;font-size:12px;white-space:nowrap}
+@media(prefers-color-scheme:dark){:root[data-auto="1"]{--bg:#111214;--text:#f2f2ef;--card:#191a1d;--soft:#25262a;--line:#303136;--muted:#9a9da5}}
+</style>
+</head>
+<body>
+<div class="app">
+<section id="guest">
+ <div class="top"><span></span><div><button class="icon" onclick="openAppearance()">Aa</button><button class="icon" onclick="toast('语言设置将在下一轮继续细化')">文</button></div></div>
+ <div class="hero"><div class="heroInner"><div class="mark"></div><h1>Sing It</h1><div class="tag">喜欢这首歌？把它唱会。</div><div class="search" onclick="openLesson()">⌕　搜索歌曲或歌手</div><button class="primary" onclick="openLesson()">＋ 添加一首歌</button></div></div>
+</section>
+
+<section id="home" class="page hide">
+ <div class="top" style="padding-left:0;padding-right:0"><div class="brand" style="padding:0"><div class="mark"></div><b>Sing It</b></div><button class="icon" onclick="openAppearance()">Aa</button></div>
+ <div class="search">⌕　搜索歌曲或歌手　　＋ 添加</div>
+ <div class="section"><h2>正在学习</h2><div class="song"><div class="cover">H</div><div class="meta"><b>Hurt</b><div class="small">NewJeans · 上次的位置已保留</div></div><button class="pill" onclick="openLesson()">继续</button></div></div>
+ <div class="section"><h2>接下来</h2><div class="song"><div class="cover">D</div><div class="meta"><b>Ditto</b><div class="small">NewJeans</div></div></div></div>
+ <div class="section"><h2>我的歌曲</h2><div class="song"><div class="cover">S</div><div class="meta"><b>Super Shy</b><div class="small">NewJeans</div></div></div></div>
+</section>
+
+<section id="profile" class="page profile hide"><h1>我的</h1>
+ <div class="song"><div class="cover">S</div><div class="meta"><b>Sing It 用户</b><div class="small">账号、同步与个性化</div></div></div>
+ <div class="menu"><div>我的歌曲　›</div><div>学习记录　›</div><div>学习队列　›</div><div onclick="openAppearance()">外观与语言　›</div><div>帮助与反馈　›</div><div>关于 Sing It　›</div></div>
+</section>
+
+<section id="lesson" class="lesson hide">
+ <div class="lessonHead"><div class="title"><b>Hurt</b><span class="small">NewJeans</span></div>
+  <div class="tabs"><button class="on" onclick="mode('learn',this)">学习</button><button onclick="mode('sing',this)">跟唱</button><button onclick="mode('challenge',this)">挑战</button></div>
+  <div id="tools" class="toolrow"><button onclick="toggleControls(this)">统一设置⌄</button><button class="optional" onclick="toggleFlag('translation',this)">翻译</button><button class="optional" onclick="toggleFlag('covered',this)">隐藏歌词</button><button class="optional" onclick="toggleFlag('assist',this)">发音辅助</button></div>
+ </div>
+ <div id="learn" class="page"></div>
+ <div id="sing" class="page hide" style="text-align:center;padding-top:70px"><div class="small">跟唱 · 一句一句来</div><h2 style="margin-top:28px">I don't wanna fall in love again</h2><button class="primary" style="width:120px;border-radius:99px" onclick="speak(`I don't wanna fall in love again`)">▶ 播放</button><p class="small">听一句，再跟着唱一句。</p></div>
+ <div id="challenge" class="page hide"></div>
+ <div class="songSwitch"><button onclick="confirmSong('上一首','Super Shy')">‹ 上一首</button><button onclick="confirmSong('下一首','Ditto')">下一首 ›</button></div>
+</section>
+
+<nav class="nav"><button onclick="go('home',this)">⌂<br>首页</button><button class="on" onclick="go('study',this)">▣<br>学习</button><button onclick="go('profile',this)">●<br>我的</button></nav>
+</div>
+
+<div id="appearance" class="sheetBack hide" onclick="if(event.target===this)closeAppearance()"><div class="sheet"><h2>外观</h2>
+ <div class="presetRow">
+  <button class="preset" style="background:#17191f" onclick="preset('#17191f','#f6f6f4','#17191f')"></button>
+  <button class="preset" style="background:#4b57d1" onclick="preset('#4b57d1','#f5f6fb','#15172a')"></button>
+  <button class="preset" style="background:#a24d72" onclick="preset('#a24d72','#faf5f7','#241820')"></button>
+  <button class="preset" style="background:#397565" onclick="preset('#397565','#f3f7f5','#15201d')"></button>
+  <button class="preset" style="background:#a46731" onclick="preset('#a46731','#faf6f1','#261c14')"></button>
+ </div>
+ <div class="setting"><span>按钮 / 强调色</span><input id="accentPicker" type="color" value="#17191f" oninput="setVar('--accent',this.value)"></div>
+ <div class="setting"><span>页面底色</span><input id="bgPicker" type="color" value="#f6f6f4" oninput="setVar('--bg',this.value)"></div>
+ <div class="setting"><span>文字颜色</span><input id="textPicker" type="color" value="#17191f" oninput="setVar('--text',this.value)"></div>
+ <div class="setting"><span>显示模式</span><select id="displayMode" onchange="displayMode(this.value)"><option value="system">跟随手机</option><option value="light">浅色</option><option value="dark">深色</option></select></div>
+ <button class="primary" onclick="closeAppearance()">完成</button>
+</div></div>
+
+<div id="modal" class="modal hide"><div class="modalCard"><div id="direction" class="small">下一首</div><h2 id="nextSong">Ditto</h2><div class="small">NewJeans</div><div class="actions"><button onclick="closeModal()">取消</button><button class="yes" onclick="switchSong()">切换</button></div></div></div>
+
+<script>
+const lines=[
+ ["I don't wanna","fall in love","again"],
+ ["But I know","that I can't","help it"],
+ ["I just wanna","be with you"],
+ ["And I'll try","not to let it show"]
+];
+const translations=["我不想再次坠入爱河","但我知道自己无法控制","我只想和你在一起","而我会试着不让它显露"];
+let flags={translation:false,covered:false,assist:false}, guest=true, controlsOpen=false;
+
+function q(id){return document.getElementById(id)}
+function toast(t){let x=document.createElement('div');x.className='toast';x.textContent=t;document.body.appendChild(x);setTimeout(()=>x.remove(),1400)}
+function hidePages(){['guest','home','profile','lesson'].forEach(x=>q(x).classList.add('hide'))}
+function openLesson(){hidePages();q('lesson').classList.remove('hide');renderLearn();renderChallenge()}
+function go(w,b){
+ if(guest && w!=='study'){toast('游客可完整体验 1 首歌；选择下一首时再登录');return}
+ hidePages();
+ if(w==='home')q('home').classList.remove('hide');
+ if(w==='profile')q('profile').classList.remove('hide');
+ if(w==='study')openLesson();
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on')); if(b)b.classList.add('on')
+}
+function safe(s){return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;')}
+function jsq(s){return s.replaceAll("\\","\\\\").replaceAll("'","\\'")}
+function renderLearn(){
+ q('learn').innerHTML='';
+ lines.forEach((arr,i)=>{
+  const d=document.createElement('div'); d.className='lineCard'; d.style.setProperty('--n',arr.length);
+  d.innerHTML=`<div class="chunks">${arr.map(x=>`<button class="chunk ${flags.covered?'covered':''}" onclick="speak('${jsq(x)}')">${safe(x)}</button>`).join('')}<button class="play" onclick="speak('${jsq(arr.join(" "))}')">▶</button></div>
+  ${flags.assist?`<div class="extra">${arr.map(x=>x.toLowerCase()).join('　·　')}</div>`:''}
+  <div class="inputs">${arr.map(x=>`<input data-answer="${safe(x)}" onkeydown="learnKey(event,this)">`).join('')}</div>
+  ${flags.translation?`<div class="extra translation">${translations[i]}</div>`:''}`;
+  q('learn').appendChild(d)
+ })
+}
+function learnKey(e,el){
+ if(e.key!=='Enter')return;
+ const ok=el.value.trim().toLowerCase()===el.dataset.answer.trim().toLowerCase();
+ el.classList.toggle('bad',!ok);
+ if(ok){speak(el.value);const all=[...document.querySelectorAll('#learn input')],i=all.indexOf(el);if(all[i+1])all[i+1].focus()}
+}
+function toggleControls(b){controlsOpen=!controlsOpen;document.querySelectorAll('.optional').forEach(x=>x.classList.toggle('hide',!controlsOpen));b.textContent=controlsOpen?'统一设置⌃':'统一设置⌄'}
+function toggleFlag(k,b){flags[k]=!flags[k];b.classList.toggle('on',flags[k]);renderLearn()}
+function mode(m,b){document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');['learn','sing','challenge'].forEach(x=>q(x).classList.add('hide'));q(m).classList.remove('hide');q('tools').classList.toggle('hide',m!=='learn')}
+function renderChallenge(){
+ q('challenge').innerHTML='<div class="challengeNote">自由默写。只有按回车时才检查；有差异会标红，但你仍然可以继续往下，也可以随时回来修改。</div>';
+ lines.forEach(arr=>{const d=document.createElement('div');d.className='challengeRow';d.style.setProperty('--n',arr.length);d.innerHTML=`<div class="challengeInputs">${arr.map(x=>`<input data-answer="${safe(x)}" onkeydown="challengeKey(event,this)">`).join('')}</div>`;q('challenge').appendChild(d)})
+}
+function challengeKey(e,el){if(e.key!=='Enter')return;const ok=el.value.trim().toLowerCase()===el.dataset.answer.trim().toLowerCase();el.classList.toggle('bad',!ok);const all=[...document.querySelectorAll('#challenge input')],i=all.indexOf(el);if(all[i+1])all[i+1].focus()}
+function speak(t){if(!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.88;window.speechSynthesis.speak(u)}
+function confirmSong(dir,song){q('direction').textContent=dir;q('nextSong').textContent=song;q('modal').classList.remove('hide')}
+function closeModal(){q('modal').classList.add('hide')}
+function switchSong(){closeModal();if(guest){toast('这一首可继续体验；登录后即可选择更多歌曲')}else toast('已切换（体验版）')}
+function openAppearance(){q('appearance').classList.remove('hide')}
+function closeAppearance(){q('appearance').classList.add('hide');saveTheme()}
+function setVar(k,v){document.documentElement.style.setProperty(k,v)}
+function preset(a,b,t){setVar('--accent',a);setVar('--bg',b);setVar('--text',t);q('accentPicker').value=a;q('bgPicker').value=b;q('textPicker').value=t}
+function displayMode(v){document.documentElement.dataset.auto=v==='system'?'1':'0';if(v==='dark'){preset('#f1f1ed','#111214','#f2f2ef');setVar('--accentText','#151515')}else if(v==='light'){preset('#17191f','#f6f6f4','#17191f');setVar('--accentText','#fff')}}
+function saveTheme(){localStorage.setItem('singit43theme',JSON.stringify({a:getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),b:getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(),t:getComputedStyle(document.documentElement).getPropertyValue('--text').trim()}))}
+function loadTheme(){try{const x=JSON.parse(localStorage.getItem('singit43theme'));if(x){setVar('--accent',x.a);setVar('--bg',x.b);setVar('--text',x.t)}}catch(e){}}
+loadTheme();renderLearn();renderChallenge();toggleControls(q('tools').firstElementChild);
+</script></body></html>
